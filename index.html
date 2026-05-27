@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kokyu | Aikido</title>
+    <style>
+        /* CSS RESET & BASE VARIABLES (LIGHT MODE DEFAULT) */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --border-color: #dddddd;
+            --secondary-text: #555555;
+        }
+
+        /* DARK MODE VARIABLES */
+        body.dark-mode {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --border-color: #333333;
+            --secondary-text: #aaaaaa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* HEADER & NAVIGATION */
+        header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: lowercase;
+            cursor: pointer;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        nav button {
+            text-transform: lowercase;
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        nav button:hover, nav button.active {
+            opacity: 0.5;
+            border-bottom: 1px solid var(--text-color);
+        }
+
+        .theme-toggle {
+            font-size: 1.2rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .theme-toggle:hover {
+            opacity: 1;
+        }
+
+        /* MAIN CONTENT AREA */
+        main {
+            flex: 1;
+            padding: 3rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* HOME */
+        #home {
+            text-align: center;
+            margin-top: 10vh;
+        }
+
+        #home h1 {
+            font-size: 2rem;
+            font-weight: normal;
+            margin-bottom: 1rem;
+        }
+
+        #home p {
+            color: var(--secondary-text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* BLOG PREVIEWS */
+        .blog-post-preview {
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 0;
+            cursor: pointer;
+            transition: opacity 0.2s, padding-left 0.2s;
+        }
+
+        .blog-post-preview:hover {
+            opacity: 0.7;
+            padding-left: 10px;
+        }
+
+        .blog-post-preview:last-child {
+            border-bottom: none;
+        }
+
+        .blog-date {
+            font-size: 0.8rem;
+            color: var(--secondary-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-blog {
+            text-align: center;
+            color: var(--secondary-text);
+            margin-top: 15vh;
+            font-style: italic;
+        }
+
+        /* MODAL (FULL BLOG POST) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: block;
+            animation: fadeIn 0.2s ease-in;
+        }
+
+        .modal-content {
+            max-width: 800px;
+            margin: 4rem auto;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -3rem;
+            right: 0;
+            font-size: 2rem;
+            line-height: 1;
+            opacity: 0.7;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        .modal-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* CONTACT */
+        #contact {
+            text-align: center;
+            margin-top: 15vh;
+        }
+
+        .email-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            transition: opacity 0.2s, border-color 0.2s;
+        }
+
+        .email-link:hover {
+            opacity: 0.7;
+            border-color: var(--text-color);
+        }
+
+        /* SHOP */
+        #shop {
+            text-align: center;
+            margin-top: 20vh;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--secondary-text);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="switchPage('home')">kokyu</div>
+        <div class="controls">
+            <nav>
+                <button class="nav-btn active" onclick="switchPage('home')" data-target="home">home</button>
+                <button class="nav-btn" onclick="switchPage('blog')" data-target="blog">blog</button>
+                <button class="nav-btn" onclick="switchPage('contact')" data-target="contact">contact</button>
+                <button class="nav-btn" onclick="switchPage('shop')" data-target="shop">shop</button>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">◐</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- HOME -->
+        <section id="home" class="page active">
+            <h1>What is Kokyu?</h1>
+            <p>A space dedicated to Aikido as an art of de-escalation and deep body awareness. We focus on functional movement, minimalism in action, and accepting reality both on and off the mat.</p>
+        </section>
+
+        <!-- BLOG -->
+        <section id="blog" class="page">
+            <div id="blog-container">
+                <!-- Posts generated by JS or Empty State -->
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="page">
+            <h2 style="margin-bottom: 2rem; font-weight: normal;">Get in touch</h2>
+            <p style="margin-bottom: 2rem; color: var(--secondary-text);">Feel free to drop me a message directly at:</p>
+            <a href="mailto:kokyumail@gmail.com" class="email-link">kokyumail@gmail.com</a>
+        </section>
+
+        <!-- SHOP -->
+        <section id="shop" class="page">
+            <h2 style="font-weight: normal; letter-spacing: 1px;">coming soon</h2>
+        </section>
+    </main>
+
+    <!-- BLOG POST MODAL -->
+    <div id="post-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <div class="blog-date" id="modal-date"></div>
+            <h1 class="blog-title" id="modal-title" style="font-size: 2rem; margin-bottom: 2rem;"></h1>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; <span id="year"></span> kokyu. All rights reserved.
+    </footer>
+
+    <script>
+        // 1. THEME MANAGEMENT (Light by default)
+        const body = document.body;
+        
+        // Sprawdź pamięć przeglądarki pod kątem wybranego motywu (aplikuj dark-mode jeśli wybrany)
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+        }
+
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // 2. NAVIGATION SYSTEM
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            const targetBtn = document.querySelector(`.nav-btn[data-target="${pageId}"]`);
+            if(targetBtn) targetBtn.classList.add('active');
+        }
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 3. BLOG SYSTEM (Tablica aktualnie pusta)
+        const blogPosts = [];
+
+        function renderPosts() {
+            const container = document.getElementById('blog-container');
+            
+            // Obsługa braku wpisów
+            if (blogPosts.length === 0) {
+                container.innerHTML = '<div class="empty-blog">no posts yet. the mat is currently empty.</div>';
+                return;
+            }
+
+            // Renderowanie wpisów
+            container.innerHTML = blogPosts.map(post => `
+                <article class="blog-post-preview" onclick="openModal(${post.id})">
+                    <div class="blog-date">${post.date}</div>
+                    <h2 class="blog-title">${post.title}</h2>
+                    <p style="color: var(--secondary-text); font-size: 0.95rem;">${post.excerpt}</p>
+                </article>
+            `).join('');
+        }
+
+        // 4. MODAL LOGIC
+        function openModal(id) {
+            const post = blogPosts.find(p => p.id === id);
+            if (!post) return;
+
+            document.getElementById('modal-date').textContent = post.date;
+            document.getElementById('modal-title').textContent = post.title;
+            document.getElementById('modal-body').innerHTML = post.content;
+            
+            document.getElementById('post-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('post-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Inicjalizacja
+        renderPosts();
+    </script>
+</body>
+</html>
